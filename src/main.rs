@@ -96,7 +96,7 @@ fn read_data_from_file(file_path: &str) -> Result<Vec<(NaiveDateTime, Vec<String
 
 fn plot_power(data: &Vec<(f64, Vec<f64>)>, power_index: usize, start: NaiveDateTime, end: NaiveDateTime, output_dir: &Path,tsys_filename:&str,source:&str) -> Result<(), Box<dyn Error>> {
     // ファイル名を生成
-    let filename = format!("{}_{}_{}_power{}_tsys2plot.png",tsys_filename,source,start.format("%Y%m%d%H%M%S").to_string(),power_index + 1);
+    let filename = format!("{}_{}_{}_ch{}_tsys2plot.png",tsys_filename,source,start.format("%Y%m%d%H%M%S").to_string(),power_index + 1);
     let file_path = output_dir.join(filename); // 出力ディレクトリとファイル名を結合
 
     let root_area = BitMapBackend::new(&file_path, (1024, 768)).into_drawing_area();
@@ -125,7 +125,7 @@ fn plot_power(data: &Vec<(f64, Vec<f64>)>, power_index: usize, start: NaiveDateT
         .x_label_style(("sans-serif", 18).into_font())
         .y_label_style(("sans-serif", 18).into_font())
         .x_desc(&format!("Elapsed time since {} UT (sec)", start.format("%Y-%m-%d %H:%M:%S").to_string()))
-        .y_desc(&format!("Power {}", power_index + 1))
+        .y_desc(&format!("Ch {} (dBm)", power_index + 1))
         .draw()?;
 
     let series_data: Vec<(f64, f64)> = data
@@ -136,7 +136,7 @@ fn plot_power(data: &Vec<(f64, Vec<f64>)>, power_index: usize, start: NaiveDateT
     chart.draw_series(LineSeries::new(series_data, &RED).point_size(0))?;
 
     root_area.present()?;
-    println!("Generating >>> {}", file_path.to_str().unwrap()); // 生成されたファイルパスを表示
+    println!("   Generating >>> {}", file_path.to_str().unwrap()); // 生成されたファイルパスを表示
     Ok(())
 }
 
